@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -51,30 +50,54 @@ func (h *AnalysisHandler) Analyze(w http.ResponseWriter, r *http.Request) {
 		Var3: var3,
 	}
 
-	// 4. Call the AnalysisService
-	response, err := h.analysisService.PerformAnalysis(request)
+	resp, err := h.analysisService.PerformAnalysis(request)
 	if err != nil {
 		log.Printf("Error performing analysis: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		//Added Model if the analysis does not connect properly.
+		response := model.AnalysisResponse{
+			Result:      "Default",
+			Explanation: "error, unable to connect to LLM",
+		}
+
+		data := map[string]interface{}{
+			"Request":      request,
+			"Response":     response,
+			"TemplateName": "analysis", // Pass   template name to the base
+		}
+
+		// 5. Render the response to the analysis.html template
+		tmpl, err := template.ParseFiles("web/templates/base.html", "web/templates/analysis.html") // Assuming base template includes content
+		if err != nil {
+			log.Printf("Error parsing template: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
+			log.Printf("Error executing template: %v. data info is %+v", err, data)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError) // Proper Handling
+			return
+		}
+		return //MAKE SURE to have a RETURN STATMENT here since it continues to load if it does not return
 	}
 
-	// 5. Render the response to the analysis.html template
-	tmpl, err := template.ParseFiles("web/templates/base.html") // Assuming base template includes content
+	data := map[string]interface{}{
+		"Request":      request,
+		"Response":     resp,
+		"TemplateName": "analysis", // Pass template name to the base
+	}
+	tmpl, err := template.ParseFiles("web/templates/base.html", "web/templates/analysis.html") // Assuming base template includes content
+
 	if err != nil {
 		log.Printf("Error parsing template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	data := map[string]interface{}{
-		"Request":      request,
-		"Response":     response,
-		"TemplateName": "analysis", // Pass template name to the base
-	}
-
 	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
-		fmt.Println("Failed to parsing HTML")
+		log.Printf("Error executing template: %v.Data info is %+v", err, data) //Print statement to verify data output
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError) //Proper Error and error
+
 		return
 	}
 

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -14,7 +13,7 @@ func NewHomeHandler() *HomeHandler {
 }
 
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("web/templates/base.html") // Adjust path as needed
+	tmpl, err := template.ParseFiles("web/templates/base.html", "web/templates/home.html") // Adjust path as needed
 	if err != nil {
 		log.Printf("Error parsing template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -26,8 +25,9 @@ func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
 		"TemplateName": "home", // Add this line to specify home tempalte
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil{
-			fmt.Println("Failed to parsing HTML")
-			return
+	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
+		log.Printf("Error executing template: %v. Data is %v. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError) // Proper Handling
+		return
 	}
 }

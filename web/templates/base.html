@@ -1,3 +1,4 @@
+{{define "base"}}
 <!doctype html>
 <html lang="en">
     <head>
@@ -5,19 +6,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{{ template "title" .}}</title>
         <script src="/web/js/htmx.min.js"></script>
-        <link rel="stylesheet" href="/web/css/styles.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/digitallytailored/classless@latest/classless.min.css"
+        />
     </head>
     <body>
         <header>
             <h1>My Analysis App</h1>
         </header>
         <main>
-            {{ if eq .TemplateName "home"}} {{ template "content" .}} {{ else if
-            eq .TemplateName "analysis"}} {{ template "analysisContent" . }}
-            {{end}}
+            {{ if eq .TemplateName "home"}} {{ template "content" .}} {{end}}
         </main>
         <footer>
             <p>&copy; 2024 My App</p>
         </footer>
     </body>
 </html>
+{{end}}
