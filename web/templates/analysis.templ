@@ -1,0 +1,33 @@
+package templates
+
+import "frcSummary/internal/model"
+import "strconv"
+
+templ Analysis(request model.AnalysisRequest, response model.AnalysisResponse) {
+	<div>
+		<h2>Analysis Result</h2>
+		<p>
+			<b>Request:</b>
+		</p>
+		<ul>
+			<li>
+				Var1: { request.Var1 }
+			</li>
+			<li>
+				Var2: { strconv.Itoa(request.Var2) }
+			</li>
+			<li>
+				Var3: { strconv.FormatBool(request.Var3) }
+			</li>
+		</ul>
+		<div id="llm-response">
+			<h3>LLM Response</h3>
+			<p>
+				{ response.Result }
+			</p>
+			<p>
+				<i>{ response.Explanation }</i>
+			</p>
+		</div>
+	</div>
+}

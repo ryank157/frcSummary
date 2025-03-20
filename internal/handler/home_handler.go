@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"html/template"
+	"frcSummary/web/templates" // Import the generated template package
 	"log"
 	"net/http"
 )
@@ -13,21 +13,13 @@ func NewHomeHandler() *HomeHandler {
 }
 
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("web/templates/base.html", "web/templates/home.html") // Adjust path as needed
+	// Render the Home template within the Base template
+	homeContent := templates.Home()
+	err := templates.Base("Home", homeContent).Render(r.Context(), w) // Use Base template
 	if err != nil {
-		log.Printf("Error parsing template: %v", err)
+		log.Printf("Error rendering template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	data := map[string]interface{}{
-		"Message":      "Hello, HTMX!",
-		"TemplateName": "home", // Add this line to specify home tempalte
-	}
-
-	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
-		log.Printf("Error executing template: %v. Data is %v. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError) // Proper Handling
-		return
-	}
 }

@@ -1,0 +1,19 @@
+package templates
+
+templ Base(title string, content templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/digitallytailored/classless@latest/classless.min.css"/>
+			<script src="/web/js/htmx.min.js"></script>
+			<title>{ title }</title>
+		</head>
+		<body>
+			<h1>My Analysis App</h1>
+			@content
+			<p>&copy; 2024 My App</p>
+		</body>
+	</html>
+}
