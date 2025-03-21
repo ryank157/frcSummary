@@ -28,9 +28,16 @@ func NewOpenRouterClient(apiKey string) LLMClient {
 const MatchSystemMessage = `Create a summary of the match in the past that follows the format of the following summary.
 This is the 2025 First Robotics competition. There are 3 robots on 2 alliances (red, blue) that are facing off against each other.
 There are three distinct phases to the match: Autonomous, tele operated, endgame. The autonomous is preprogrammed using sensors and is worht more points compared to teleop
-Have a breakdown of the points between the 2 teams at each of the three phases. The prompt will hold the data for the match
+Have a breakdown of the points between the 2 teams at each of the three phases. The prompt will hold the data for the match.
+
+There are two ways to score in autonomous. Coral pieces on the reef worth 7,6,4,3 in descending order. Robots can also score algae for 4 points
+These are the same methods that are used to score in teleop.
+Endgame scores occur in the barge. 2 points for a park, 6 points for a shallow hang, and 12 points for a deep hang
+
+You don't need to give details about how the game works. The user already knows that information.
 
 
+Sample Format for your response
 The upcoming match #14 should be a victory for team #1778. All
 of the teams have only two matches in this first event of the season
 so it is easily possible for their to be an upset.
@@ -41,15 +48,17 @@ teleop team 1778 has dominated. The blue alliances only weakness is
 its complete inability to climb. If it is close at the end the red alliance
 could win with 9450's climb.
 
-If red gets out to an early lead it could be exciting.`
+If red gets out to an early lead it could be exciting.
+End Sample Format
+
+Begin data`
 
 func (c *OpenRouterClient) Generate(prompt string) (string, error) {
 	completion := c.client.
 		NewChatCompletion().
 		WithDebug(true).    // Enable debug mode to see the request and response in the console
 		WithModel(c.model). // Change the model if you want
-		WithSystemMessage(MatchSystemMessage).
-		WithUserMessage(prompt)
+		WithUserMessage(MatchSystemMessage + prompt)
 
 	_, resp, err := completion.Execute()
 	if err != nil {
