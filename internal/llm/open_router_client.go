@@ -30,8 +30,8 @@ func (c *OpenRouterClient) Generate(prompt string) (string, error) {
 		NewChatCompletion().
 		WithDebug(true).    // Enable debug mode to see the request and response in the console
 		WithModel(c.model). // Change the model if you want
-		WithSystemMessage("You are a helpful assistant expert in geography.").
-		WithUserMessage("What is the capital of France?")
+		WithSystemMessage("You are an excellent ascii artist").
+		WithUserMessage(prompt)
 
 	_, resp, err := completion.Execute()
 	if err != nil {

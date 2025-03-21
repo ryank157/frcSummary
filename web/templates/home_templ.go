@@ -29,7 +29,7 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Welcome to My Analysis App!</h1><p>Enter parameters for analysis:</p><form hx-get=\"/analyze\" hx-target=\"#analysis-result\"><label for=\"var1\">Var1:</label> <input type=\"text\" id=\"var1\" name=\"var1\" value=\"default_value\"><br><label for=\"var2\">Var2:</label> <input type=\"number\" id=\"var2\" name=\"var2\" value=\"123\"><br><label for=\"var3\">Var3:</label> <input type=\"checkbox\" id=\"var3\" name=\"var3\" value=\"true\"><br><button type=\"submit\">Analyze</button></form><div id=\"analysis-result\">Click Analyze to see the results here.</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Welcome to My Analysis App!</h1><form hx-get=\"/analyze\" hx-ext=\"debug\" hx-target=\"#analysis-result\" hx-swap=\"innerHTML\" hx-boost=\"true\" hx-push-url=\"false\"><button type=\"submit\">Analyze</button></form><div id=\"analysis-result\">Click Analyze to see the results here.</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

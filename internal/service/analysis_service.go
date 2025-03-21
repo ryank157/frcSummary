@@ -16,8 +16,7 @@ func NewAnalysisService(llmClient llm.LLMClient) *AnalysisService {
 
 func (s *AnalysisService) PerformAnalysis(request model.AnalysisRequest) (model.AnalysisResponse, error) {
 	// 1. Construct the prompt for the LLM
-	prompt := fmt.Sprintf("Analyze the following data: Var1=%s, Var2=%d, Var3=%t",
-		request.Var1, request.Var2, request.Var3)
+	prompt := fmt.Sprintf("Respond with an otter ascii")
 
 	// 2. Call the LLM client
 	llmResponse, err := s.llmClient.Generate(prompt)
