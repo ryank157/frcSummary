@@ -19,6 +19,7 @@ func main() {
 	}
 
 	// Initialize Logger
+	fmt.Printf("level %s", cfg.LogLevel)
 	logger := utils.NewLogger(cfg.LogLevel)
 
 	// Initialize OpenRouter Client

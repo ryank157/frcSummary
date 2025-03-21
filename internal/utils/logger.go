@@ -22,14 +22,14 @@ func NewLogger(level string) *Logger {
 
 // Infof logs an info message.
 func (l *Logger) Infof(format string, v ...interface{}) {
-	if l.level == "debug" || l.level == "info" {
+	if l.level == "DEBUG" || l.level == "INFO" {
 		l.log.Printf("[INFO] "+format, v...)
 	}
 }
 
 // Debugf logs a debug message.
 func (l *Logger) Debugf(format string, v ...interface{}) {
-	if l.level == "debug" {
+	if l.level == "DEBUG" {
 		l.log.Printf("[DEBUG] "+format, v...)
 	}
 
