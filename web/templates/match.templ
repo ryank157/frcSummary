@@ -1,0 +1,143 @@
+package templates
+
+import (
+    "frcSummary/internal/statbotics"
+    "strconv"
+)
+
+templ Match(matchRes *statbotics.MatchResponse) {
+    <div class="match-container">
+        <div class="match-header">
+            <h2>{ matchRes.MatchName }</h2>
+            <div class="match-info">
+                <span>{ matchRes.Event } { strconv.Itoa(matchRes.Year) }</span>
+                <span>Week { strconv.Itoa(matchRes.Week) }</span>
+                <span>Status: { matchRes.Status }</span>
+            </div>
+        </div>
+        <div class="match-content">
+            <div class="alliance red">
+                <h3>Red Alliance</h3>
+                <div class="teams">
+                    if len(matchRes.Alliances.Red.TeamKeys) > 0 {
+                        <ul>
+                            for _, team := range matchRes.Alliances.Red.TeamKeys {
+                                <li>{ strconv.Itoa(team) }</li>
+                            }
+                        </ul>
+                    } else {
+                        <p>No teams listed</p>
+                    }
+                </div>
+                <div class="score-display">
+                    <div class="score">
+                        <h4>Score</h4>
+                        <span class="large-score">{ strconv.Itoa(matchRes.Result.RedScore) }</span>
+                    </div>
+                    @WinnerBadge(matchRes.Result.Winner, "red")
+                </div>
+                @DetailRow("Auto Points", matchRes.Result.RedAutoPoints)
+                @DetailRow("Teleop Points", matchRes.Result.RedTeleopPoints)
+                @DetailRow("Endgame Points", matchRes.Result.RedEndgamePoints)
+                <div class="ranking-points">
+                    <h4>Ranking Points</h4>
+                    if matchRes.Result.RedRp1 {
+                        <div class="rp-badge">RP1</div>
+                    }
+                    if matchRes.Result.RedRp2 {
+                        <div class="rp-badge">RP2</div>
+                    }
+                    if matchRes.Result.RedRp3 {
+                        <div class="rp-badge">RP3</div>
+                    }
+                    if matchRes.Result.RedAutoRp {
+                        <div class="rp-badge">Auto RP</div>
+                    }
+                    if matchRes.Result.RedCoralRp {
+                        <div class="rp-badge">Coral RP</div>
+                    }
+                    if matchRes.Result.RedBargeRp {
+                        <div class="rp-badge">Barge RP</div>
+                    }
+                </div>
+            </div>
+            <div class="alliance blue">
+                <h3>Blue Alliance</h3>
+                <div class="teams">
+                    if len(matchRes.Alliances.Blue.TeamKeys) > 0 {
+                        <ul>
+                            for _, team := range matchRes.Alliances.Blue.TeamKeys {
+                                <li>{ strconv.Itoa(team) }</li>
+                            }
+                        </ul>
+                    } else {
+                        <p>No teams listed</p>
+                    }
+                </div>
+                <div class="score-display">
+                    <div class="score">
+                        <h4>Score</h4>
+                        <span class="large-score">{ strconv.Itoa(matchRes.Result.BlueScore) }</span>
+                    </div>
+                    @WinnerBadge(matchRes.Result.Winner, "blue")
+                </div>
+                @DetailRow("Auto Points", matchRes.Result.BlueAutoPoints)
+                @DetailRow("Teleop Points", matchRes.Result.BlueTeleopPoints)
+                @DetailRow("Endgame Points", matchRes.Result.BlueEndgamePoints)
+                <div class="ranking-points">
+                    <h4>Ranking Points</h4>
+                    if matchRes.Result.BlueRp1 {
+                        <div class="rp-badge">RP1</div>
+                    }
+                    if matchRes.Result.BlueRp2 {
+                        <div class="rp-badge">RP2</div>
+                    }
+                    if matchRes.Result.BlueRp3 {
+                        <div class="rp-badge">RP3</div>
+                    }
+                    if matchRes.Result.BlueAutoRp {
+                        <div class="rp-badge">Auto RP</div>
+                    }
+                    if matchRes.Result.BlueCoralRp {
+                        <div class="rp-badge">Coral RP</div>
+                    }
+                    if matchRes.Result.BlueBargeRp {
+                        <div class="rp-badge">Barge RP</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+// Helper Templates:
+
+// WinnerBadge displays the winner badge if the alliance won.
+templ WinnerBadge(winner *string, alliance string) {
+    if winner != nil && *winner == alliance {
+        <div class="winner-badge">WINNER</div>
+    }
+}
+
+// DetailRow displays a detail row if the points are not nil.
+templ DetailRow(label string, points interface{}) {
+    if points != nil {
+        @DetailRowSwitch(label, points)
+    }
+}
+
+//DetailRowSwitch to handle the varying data types of Interface
+templ DetailRowSwitch(label string, points interface{}) {
+    switch v := points.(type) {
+    case float64:
+        <div class="detail-row">
+            <span>{ label }:</span>
+            <span>{ strconv.FormatFloat(v, 'f', 0, 64) }</span>
+        </div>
+    case int:
+        <div class="detail-row">
+            <span>{ label }:</span>
+            <span>{ strconv.Itoa(v) }</span>
+        </div>
+    }
+}
